@@ -59,15 +59,28 @@ public class FreewayGPT extends ApplicationAdapter {
 		batch.draw(chickenImage, chicken.x, chicken.y);
 		batch.end();
 
-		// Mechanics to chicken move
-		if(Gdx.input.isTouched()) {
+		// mechanics to chicken move
+		// we can adjust velocity to up or down
+		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			chicken.y -= 200 * Gdx.graphics.getDeltaTime();
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			chicken.y += 200 * Gdx.graphics.getDeltaTime();
+		}
+
+		// mechanics to reset position of chicken
+		// when chicken arrive in sidewalk "end" or top
+		Vector3 posEnd = new Vector3();
+		Vector3 posChicken = new Vector3();
+		posEnd.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 64, 0);
+		posChicken.set(chicken.x, chicken.y, 0);
+
+		if(posEnd.y - posChicken.y < 20){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
 			chicken.y = 20;
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) chicken.y -= 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) chicken.y += 200 * Gdx.graphics.getDeltaTime();
 
 		// make sure the chicken stays within the screen bounds
 		if(chicken.y < 0) chicken.y = 0;
