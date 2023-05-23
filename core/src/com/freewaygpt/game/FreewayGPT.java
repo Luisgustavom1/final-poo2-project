@@ -31,6 +31,7 @@ public class FreewayGPT extends ApplicationAdapter {
 		chickenImage = new Assets().chickenImageCreate();
 		chicken = new Assets().chickenCreate();
 
+		// Config the camera to use a SpriteBatch
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1024, 520);
 		batch = new SpriteBatch();
@@ -53,12 +54,12 @@ public class FreewayGPT extends ApplicationAdapter {
 		// coordinate system specified by the camera.
 		batch.setProjectionMatrix(camera.combined);
 
-		// begin a new batch and draw the chicken and
+		// Draw the chicken in our rectangle
 		batch.begin();
 		batch.draw(chickenImage, chicken.x, chicken.y);
 		batch.end();
 
-		// process user input
+		// Mechanics to chicken move
 		if(Gdx.input.isTouched()) {
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
