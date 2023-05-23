@@ -1,6 +1,9 @@
 package com.freewaygpt.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.elements.Assets;
 import com.freewaygpt.game.elements.EndPoint;
@@ -24,6 +28,8 @@ public class FreewayGPT extends ApplicationAdapter {
 	private HashMap<String, Sidewalk> sidewalks = new HashMap<String, Sidewalk>();
 	private Texture chickenImage;
 	private Rectangle chicken;
+	private Texture carImage;
+	private ArrayList<Rectangle> cars = new ArrayList<>();
 
 	@Override
 	public void create() {
@@ -38,6 +44,13 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		sidewalks.put("init", new InitialPoint());
 		sidewalks.put("end", new EndPoint());
+
+		carImage = new Assets().carImageCreate();
+		cars.add(new Assets().carCreate(100));
+		cars.add(new Assets().carCreate(200));
+		cars.add(new Assets().carCreate(300));
+		cars.add(new Assets().carCreate(400));
+
 	}
 
 	@Override
@@ -57,6 +70,9 @@ public class FreewayGPT extends ApplicationAdapter {
 		// Draw the chicken in our rectangle
 		batch.begin();
 		batch.draw(chickenImage, chicken.x, chicken.y);
+		for(Rectangle car: cars){
+			batch.draw(carImage, car.x, car.y);
+		}
 		batch.end();
 
 		// mechanics to chicken move
@@ -85,6 +101,24 @@ public class FreewayGPT extends ApplicationAdapter {
 		// make sure the chicken stays within the screen bounds
 		if(chicken.y < 0) chicken.y = 0;
 		if(chicken.y > 436) chicken.y = 436;
+
+		// we use to create a new car
+		if(TimeUtils.nanoTime() - Assets.getTime() > Math.pow(10, (int)(Math.random()*(10)+9))){
+			cars.add(new Assets().carCreate(300));
+		}
+
+		// moving the cars
+		for(Iterator<Rectangle> iterator = cars.iterator(); iterator.hasNext();){
+			Rectangle car = iterator.next();
+			car.x += 200 * Gdx.graphics.getDeltaTime();
+
+			if(car.x < 0){
+				iterator.remove();
+			}
+			if(car.overlaps(chicken)){
+				chicken.y = 20;
+			}
+		}
 	}
 
 	@Override
