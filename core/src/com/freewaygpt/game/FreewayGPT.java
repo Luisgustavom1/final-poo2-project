@@ -45,6 +45,7 @@ public class FreewayGPT extends ApplicationAdapter {
 		sidewalks.put("init", new InitialPoint());
 		sidewalks.put("end", new EndPoint());
 
+		// init config to car functionally
 		carImage = new Assets().carImageCreate();
 		cars.add(new Assets().carCreate(100));
 		cars.add(new Assets().carCreate(200));
