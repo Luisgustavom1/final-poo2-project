@@ -45,6 +45,7 @@ public class FreewayGPT extends ApplicationAdapter {
 		sidewalks.put("init", new InitialPoint());
 		sidewalks.put("end", new EndPoint());
 
+		// init config to car functionally
 		carImage = new Assets().carImageCreate();
 		cars.add(new Assets().carCreate(100));
 		cars.add(new Assets().carCreate(200));
@@ -110,7 +111,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 		}
 
-		// moving the cars
+		// moving the cars with Iterator
 		for(Iterator<Rectangle> iterator = cars.iterator(); iterator.hasNext();){
 			Rectangle car = iterator.next();
 			car.x += 200 * Gdx.graphics.getDeltaTime();
