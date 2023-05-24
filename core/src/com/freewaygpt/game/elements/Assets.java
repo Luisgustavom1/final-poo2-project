@@ -31,8 +31,8 @@ public class Assets {
         chicken = new Rectangle();
         chicken.x = 1024/2 - 64/2;
         chicken.y = 20;
-        chicken.height = 84;
-        chicken.width = 64;
+        chicken.height = 48;
+        chicken.width = 36;
         return chicken;
     }
 

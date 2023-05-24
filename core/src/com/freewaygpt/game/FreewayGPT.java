@@ -103,8 +103,11 @@ public class FreewayGPT extends ApplicationAdapter {
 		if(chicken.y > 436) chicken.y = 436;
 
 		// we use to create a new car
-		if(TimeUtils.nanoTime() - Assets.getTime() > Math.pow(10, (int)(Math.random()*(10)+9))){
-			cars.add(new Assets().carCreate(300));
+		for(int i = 1; i <= 4; i++){
+			if(TimeUtils.nanoTime() - Assets.getTime() > Math.pow(10, (int)(Math.random()*(10)+9))){
+				cars.add(new Assets().carCreate(i * 100));
+				cars.add(new Assets().carCreate(i * 300));
+			}
 		}
 
 		// moving the cars
