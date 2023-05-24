@@ -110,7 +110,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 		}
 
-		// moving the cars
+		// moving the cars with Iterator
 		for(Iterator<Rectangle> iterator = cars.iterator(); iterator.hasNext();){
 			Rectangle car = iterator.next();
 			car.x += 200 * Gdx.graphics.getDeltaTime();
