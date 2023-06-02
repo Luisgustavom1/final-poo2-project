@@ -29,12 +29,12 @@ public class DisplayScore extends Score {
 
     public void increment() {
         super.increment();
-        display.setText(this.getScore());
+        display.setText(Integer.toString(this.getScore()));
     }
 
     public void reset() {
         super.reset();
-        display.setText(this.getScore());
+        display.setText(Integer.toString(this.getScore()));
     }
 
     public Label getDisplay() {

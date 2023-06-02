@@ -60,6 +60,8 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		stage = new Stage();
 		score = new DisplayScore();
+		score.render();
+		stage.addActor(score.getDisplay());
 	}
 
 	@Override
@@ -147,8 +149,6 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 		}
 
-		score.render();
-		stage.addActor(score.getDisplay());
 		stage.act();
 		stage.draw();
 	}
