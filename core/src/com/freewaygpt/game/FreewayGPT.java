@@ -3,7 +3,6 @@ package com.freewaygpt.game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -11,18 +10,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.elements.Assets;
+import com.freewaygpt.game.elements.DisplayScore;
 import com.freewaygpt.game.elements.EndPoint;
 import com.freewaygpt.game.elements.InitialPoint;
 import com.freewaygpt.game.entity.Sidewalk;
 
 public class FreewayGPT extends ApplicationAdapter {
-	private Colors colors;
+	private DisplayScore score;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private HashMap<String, Sidewalk> sidewalks = new HashMap<String, Sidewalk>();
@@ -30,16 +32,16 @@ public class FreewayGPT extends ApplicationAdapter {
 	private Rectangle chicken;
 	private Texture carImage;
 	private ArrayList<Rectangle> cars = new ArrayList<>();
+	private Stage stage;
 
 	@Override
 	public void create() {
-		colors = new Colors();
 		chickenImage = new Assets().chickenImageCreate();
 		chicken = new Assets().chickenCreate();
 
 		// Config the camera to use a SpriteBatch
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1024, 520);
+		camera.setToOrtho(false, 1024, 640);
 		batch = new SpriteBatch();
 
 		sidewalks.put("init", new InitialPoint());
@@ -47,16 +49,36 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		// init config to car functionally
 		carImage = new Assets().carImageCreate();
-		cars.add(new Assets().carCreate(100));
-		cars.add(new Assets().carCreate(200));
-		cars.add(new Assets().carCreate(300));
-		cars.add(new Assets().carCreate(400));
+		cars.add(new Assets().carCreate(107));
+		cars.add(new Assets().carCreate(174));
+		cars.add(new Assets().carCreate(241));
+		cars.add(new Assets().carCreate(330));
+		cars.add(new Assets().carCreate(397));
+		cars.add(new Assets().carCreate(464));
+		cars.add(new Assets().carCreate(531));
+		cars.add(new Assets().carCreate(600));
 
+		stage = new Stage();
+		score = new DisplayScore();
+		score.render();
+		stage.addActor(score.getDisplay());
 	}
 
 	@Override
 	public void render() {
-		ScreenUtils.clear(colors.getStreet());
+		ScreenUtils.clear(Colors.getStreet());
+
+		ShapeRenderer centerLineTop = new ShapeRenderer();
+		centerLineTop.begin(ShapeRenderer.ShapeType.Filled);
+		centerLineTop.setColor(Colors.getPrimary());
+		centerLineTop.rect(0, ((float) Gdx.graphics.getHeight() / 2) - 4, Gdx.graphics.getWidth(), 3);
+		centerLineTop.end();
+
+		ShapeRenderer centerLineBottom = new ShapeRenderer();
+		centerLineBottom.begin(ShapeRenderer.ShapeType.Filled);
+		centerLineBottom.setColor(Colors.getPrimary());
+		centerLineBottom.rect(0, ((float) Gdx.graphics.getHeight() / 2) + 4, Gdx.graphics.getWidth(), 3);
+		centerLineBottom.end();
 
 		sidewalks.get("init").render();
 		sidewalks.get("end").render();
@@ -87,27 +109,29 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		// mechanics to reset position of chicken
 		// when chicken arrive in sidewalk "end" or top
+		// Observable, to verify if chicken arrive in sidewalk "end" or top
 		Vector3 posEnd = new Vector3();
 		Vector3 posChicken = new Vector3();
-		posEnd.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 64, 0);
+		posEnd.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 36, 0);
 		posChicken.set(chicken.x, chicken.y, 0);
 
 		if(posEnd.y - posChicken.y < 20){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
+			score.increment();
 			chicken.y = 20;
 		}
 
 		// make sure the chicken stays within the screen bounds
 		if(chicken.y < 0) chicken.y = 0;
-		if(chicken.y > 436) chicken.y = 436;
+		if(chicken.y > 640) chicken.y = 640;
 
 		// we use to create a new car
 		for(int i = 1; i <= 4; i++){
 			if(TimeUtils.nanoTime() - Assets.getTime() > Math.pow(10, (int)(Math.random()*(10)+9))){
 				cars.add(new Assets().carCreate(i * 100));
-				cars.add(new Assets().carCreate(i * 300));
+				cars.add(new Assets().carCreate(i * 200));
 			}
 		}
 
@@ -120,14 +144,20 @@ public class FreewayGPT extends ApplicationAdapter {
 				iterator.remove();
 			}
 			if(car.overlaps(chicken)){
+				score.reset();
 				chicken.y = 20;
 			}
 		}
+
+		stage.act();
+		stage.draw();
 	}
 
 	@Override
 	public void dispose() {
 		chickenImage.dispose();
+		stage.dispose();
+		score.dispose();
 
 		for (Sidewalk sidewalk:sidewalks.values()) {
 			sidewalk.dispose();
