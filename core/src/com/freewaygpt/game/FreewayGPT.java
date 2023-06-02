@@ -13,10 +13,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.design.Colors;
-import com.freewaygpt.game.design.MineFreetypeFont;
 import com.freewaygpt.game.elements.Assets;
 import com.freewaygpt.game.elements.DisplayScore;
 import com.freewaygpt.game.elements.EndPoint;
@@ -32,7 +32,7 @@ public class FreewayGPT extends ApplicationAdapter {
 	private Rectangle chicken;
 	private Texture carImage;
 	private ArrayList<Rectangle> cars = new ArrayList<>();
-//	private SpriteBatch scoreBatch = new SpriteBatch();
+	private Stage stage;
 
 	@Override
 	public void create() {
@@ -56,19 +56,15 @@ public class FreewayGPT extends ApplicationAdapter {
 		cars.add(new Assets().carCreate(397));
 		cars.add(new Assets().carCreate(464));
 		cars.add(new Assets().carCreate(531));
+		cars.add(new Assets().carCreate(600));
 
-		this.score = new DisplayScore(new MineFreetypeFont());
+		stage = new Stage();
+		score = new DisplayScore();
 	}
 
 	@Override
 	public void render() {
 		ScreenUtils.clear(Colors.getStreet());
-
-		this.score.render();
-
-//		scoreBatch.begin();
-//		this.score.getDisplay().draw(scoreBatch, 1f);
-//		scoreBatch.end();
 
 		ShapeRenderer centerLineTop = new ShapeRenderer();
 		centerLineTop.begin(ShapeRenderer.ShapeType.Filled);
@@ -150,11 +146,18 @@ public class FreewayGPT extends ApplicationAdapter {
 				chicken.y = 20;
 			}
 		}
+
+		score.render();
+		stage.addActor(score.getDisplay());
+		stage.act();
+		stage.draw();
 	}
 
 	@Override
 	public void dispose() {
 		chickenImage.dispose();
+		stage.dispose();
+		score.dispose();
 
 		for (Sidewalk sidewalk:sidewalks.values()) {
 			sidewalk.dispose();
