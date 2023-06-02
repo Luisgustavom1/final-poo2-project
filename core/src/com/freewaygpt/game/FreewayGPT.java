@@ -3,6 +3,7 @@ package com.freewaygpt.game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -56,7 +57,6 @@ public class FreewayGPT extends ApplicationAdapter {
 		cars.add(new Assets().carCreate(397));
 		cars.add(new Assets().carCreate(464));
 		cars.add(new Assets().carCreate(531));
-		cars.add(new Assets().carCreate(600));
 
 		stage = new Stage();
 		score = new DisplayScore();
@@ -127,11 +127,21 @@ public class FreewayGPT extends ApplicationAdapter {
 		if(chicken.y < 0) chicken.y = 0;
 		if(chicken.y > 640) chicken.y = 640;
 
-		// we use to create a new car
+		Random random = new Random();
+		/**
+		 * 54 - 191
+		 * 199 - 328
+		 * 336 - 465
+		 * 473 - 570
+		 * we use to create a new car
+		 * (int)Math.floor(Math.random() * (max - min + 1) + min)
+		 */
 		for(int i = 1; i <= 4; i++){
-			if(TimeUtils.nanoTime() - Assets.getTime() > Math.pow(10, (int)(Math.random()*(10)+9))){
-				cars.add(new Assets().carCreate(i * 100));
-				cars.add(new Assets().carCreate(i * 200));
+			if(TimeUtils.nanoTime() - Assets.getTime() > Math.pow(10, (int)(Math.random()*(8)+9))){
+				cars.add(new Assets().carCreate((int)Math.floor(Math.random() * (191 - 54 + 1) + 54)));
+				cars.add(new Assets().carCreate((int)Math.floor(Math.random() * (199 - 328 + 1) + 199)));
+				cars.add(new Assets().carCreate((int)Math.floor(Math.random() * (465 - 336 + 1) + 336)));
+				cars.add(new Assets().carCreate((int)Math.floor(Math.random() * (570 - 473 + 1) + 473)));
 			}
 		}
 
