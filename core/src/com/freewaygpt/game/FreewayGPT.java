@@ -60,11 +60,8 @@ public class FreewayGPT extends ApplicationAdapter {
 		posChicken.set(game.getChicken().getX(), game.getChicken().getY(), 0);
 
 		if(posEnd.y - posChicken.y < 20){
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			game.getCamera().unproject(touchPos);
-			game.getScore().increment();
-			game.getChicken().setY(20);
+			game.getEvents().notify("end");
+//			game.getScore().increment();
 		}
 
 		// make sure the chicken stays within the screen bounds
@@ -97,8 +94,8 @@ public class FreewayGPT extends ApplicationAdapter {
 				iterator.remove();
 			}
 			if(car.overlaps(game.getChicken())){
+				game.getEvents().notify("colision");
 //				game.getScore().reset();
-				game.getChicken().setY(20);
 			}
 		}
 	}

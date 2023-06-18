@@ -2,8 +2,9 @@ package com.freewaygpt.game.components;
 
 import com.freewaygpt.game.entity.Chicken;
 import com.freewaygpt.game.entity.Rendable;
+import com.freewaygpt.game.observer.observers.Observer;
 
-public class ChickenComponent extends Chicken implements Rendable {
+public class ChickenComponent extends Chicken implements Rendable, Observer {
     private Frame frame;
 
     public ChickenComponent(Frame frame) {
@@ -22,5 +23,15 @@ public class ChickenComponent extends Chicken implements Rendable {
     @Override
     public void dispose() {
         this.getImage().dispose();
+    }
+
+    @Override
+    public void notify(String event) {
+        switch (event) {
+            case "colision":
+            case "end":
+                this.setY(20);
+            break;
+        }
     }
 }

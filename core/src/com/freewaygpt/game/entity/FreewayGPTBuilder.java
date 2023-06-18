@@ -2,6 +2,7 @@ package com.freewaygpt.game.entity;
 
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.components.*;
+import com.freewaygpt.game.observer.publishers.ObserverManager;
 
 public class FreewayGPTBuilder implements GameBuilder, Rendable {
     private DisplayScoreComponent score;
@@ -9,7 +10,8 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
     private Frame frame;
     private Sidewalks sidewalks;
     private ChickenComponent chicken;
-    public Cars cars;
+    private Cars cars;
+    private ObserverManager events = new ObserverManager("end", "colision");
 
     @Override
     public void setChicken(ChickenComponent chicken) {
@@ -53,16 +55,16 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
         return frame;
     }
 
-    public Sidewalks getSidewalks() {
-        return sidewalks;
-    }
-
     public ChickenComponent getChicken() {
         return chicken;
     }
 
     public Cars getCars() {
         return cars;
+    }
+
+    public ObserverManager getEvents() {
+        return events;
     }
 
     @Override
@@ -73,6 +75,9 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
         this.chicken.render();
 //        this.score.render();
         this.cars.render();
+
+        this.events.subscribe("end", chicken);
+        this.events.subscribe("colision", chicken);
     }
 
     @Override
