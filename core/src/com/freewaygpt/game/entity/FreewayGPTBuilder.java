@@ -9,7 +9,7 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
     private Frame frame;
     private Sidewalks sidewalks;
     private ChickenComponent chicken;
-    private Cars cars;
+    public Cars cars;
 
     @Override
     public void setChicken(ChickenComponent chicken) {
