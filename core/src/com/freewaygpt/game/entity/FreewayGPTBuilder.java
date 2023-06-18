@@ -71,14 +71,14 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
         this.camera.render();
         this.frame.render();
         this.chicken.render();
-        this.score.render();
+//        this.score.render();
         this.cars.render();
     }
 
     @Override
     public void dispose() {
         this.chicken.dispose();
-        this.score.dispose();
+//        this.score.dispose();
         this.sidewalks.dispose();
         this.frame.dispose();
         this.camera.dispose();
