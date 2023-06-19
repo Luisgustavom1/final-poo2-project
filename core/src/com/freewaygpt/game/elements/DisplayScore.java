@@ -23,17 +23,19 @@ public class DisplayScore extends Score {
 
         customFont = generator.generateFont(parameter);
         generator.dispose();
-    }
 
-    public void render() {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = customFont;
         display = new Label(Integer.toString(this.getScore()), style);
+    }
+
+    public void render() {
         display.setPosition(Gdx.graphics.getWidth() / 3 * 2, Gdx.graphics.getHeight() - 36);
     };
 
     public void increment() {
         super.increment();
+        System.out.println(this.getScore());
         display.setText(Integer.toString(this.getScore()));
     }
 
