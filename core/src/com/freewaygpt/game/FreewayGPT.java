@@ -95,7 +95,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 			if(car.overlaps(game.getChicken())){
 				game.getEvents().notify("colision");
-//				game.getScore().reset();
+				game.getScore().reset();
 			}
 		}
 	}
