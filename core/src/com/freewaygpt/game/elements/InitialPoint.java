@@ -6,6 +6,8 @@ import com.freewaygpt.game.entity.Sidewalk;
 
 public class InitialPoint extends Sidewalk {
     public void render() {
+        float yStart = 0;
+
         this.begin(this.getShapeType());
         this.setColor(this.getColor());
         this.rect(0, 0, Gdx.graphics.getWidth(), 36);
@@ -20,5 +22,7 @@ public class InitialPoint extends Sidewalk {
         this.setColor(Colors.getBlack());
         this.rect(0, 34, Gdx.graphics.getWidth(), 2);
         this.end();
+
+        this.setYStart(yStart);
     }
 }
