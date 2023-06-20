@@ -10,10 +10,14 @@ import com.freewaygpt.game.entity.Score;
 public class DisplayScore extends Score {
     private Label display;
     private BitmapFont customFont;
+    private FreeTypeFontGenerator generator;
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 
-    public void render() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/minecraft.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+    public DisplayScore() {
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/minecraft.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         parameter.size = 32;
         parameter.color = Colors.getPrimary();
 
@@ -22,13 +26,16 @@ public class DisplayScore extends Score {
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = customFont;
-
         display = new Label(Integer.toString(this.getScore()), style);
+    }
+
+    public void render() {
         display.setPosition(Gdx.graphics.getWidth() / 3 * 2, Gdx.graphics.getHeight() - 36);
     };
 
     public void increment() {
         super.increment();
+        System.out.println(this.getScore());
         display.setText(Integer.toString(this.getScore()));
     }
 
@@ -43,5 +50,6 @@ public class DisplayScore extends Score {
 
     public void dispose() {
         customFont.dispose();
+        generator.dispose();
     }
 }

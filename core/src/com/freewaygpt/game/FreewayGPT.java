@@ -61,7 +61,7 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		if(posEnd.y - posChicken.y < 20){
 			game.getEvents().notify("end");
-//			game.getScore().increment();
+			game.getScore().increment();
 		}
 
 		// make sure the chicken stays within the screen bounds
@@ -95,7 +95,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 			if(car.overlaps(game.getChicken())){
 				game.getEvents().notify("colision");
-//				game.getScore().reset();
+				game.getScore().reset();
 			}
 		}
 	}

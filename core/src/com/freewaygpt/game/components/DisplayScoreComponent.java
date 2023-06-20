@@ -5,9 +5,11 @@ import com.freewaygpt.game.elements.DisplayScore;
 import com.freewaygpt.game.entity.Rendable;
 
 public class DisplayScoreComponent extends DisplayScore implements Rendable {
-    private Stage stage = new Stage();
+    private Stage stage;
 
-    public DisplayScoreComponent() {}
+    public DisplayScoreComponent() {
+        stage = new Stage();
+    }
 
     @Override
     public void render() {
