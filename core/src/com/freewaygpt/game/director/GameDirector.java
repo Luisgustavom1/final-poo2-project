@@ -8,6 +8,7 @@ public class GameDirector {
     public void buildFreewayGPT(GameBuilder gameBuilder) {
         FreewayGPTBuilder freewayGPTBuilder = (FreewayGPTBuilder)gameBuilder;
 
+        gameBuilder.setDAO();
         gameBuilder.setCamera(new Camera());
         gameBuilder.setFrame(new Frame(freewayGPTBuilder.getCamera()));
         gameBuilder.setChicken(new ChickenComponent(freewayGPTBuilder.getFrame()));

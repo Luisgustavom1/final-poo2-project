@@ -2,6 +2,7 @@ package com.freewaygpt.game.entity;
 
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.components.*;
+import com.freewaygpt.game.dao.ScoreDAO;
 import com.freewaygpt.game.observer.publishers.ObserverManager;
 
 public class FreewayGPTBuilder implements GameBuilder, Rendable {
@@ -12,6 +13,11 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
     private ChickenComponent chicken;
     private Cars cars;
     private ObserverManager events = new ObserverManager("end", "colision");
+
+    public void setDAO(){
+        ScoreDAO.initialize();
+        ScoreDAO.addDefaultScore();
+    }
 
     @Override
     public void setChicken(ChickenComponent chicken) {
@@ -91,5 +97,6 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
         this.sidewalks.dispose();
         this.frame.dispose();
         this.camera.dispose();
+        ScoreDAO.close();
     }
 }

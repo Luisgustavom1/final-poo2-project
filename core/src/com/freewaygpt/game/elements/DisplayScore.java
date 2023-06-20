@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.freewaygpt.game.dao.ScoreDAO;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.entity.Score;
 
@@ -26,7 +27,8 @@ public class DisplayScore extends Score {
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = customFont;
-        display = new Label(Integer.toString(this.getScore()), style);
+        //display = new Label(Integer.toString(this.getScore()), style);
+        display = new Label(Integer.toString(ScoreDAO.getCurrentScore()), style);
     }
 
     public void render() {
@@ -34,14 +36,13 @@ public class DisplayScore extends Score {
     };
 
     public void increment() {
-        super.increment();
-        System.out.println(this.getScore());
-        display.setText(Integer.toString(this.getScore()));
+        ScoreDAO.incrementScore();
+        display.setText(Integer.toString(ScoreDAO.getCurrentScore()));
     }
 
     public void reset() {
-        super.reset();
-        display.setText(Integer.toString(this.getScore()));
+        ScoreDAO.resetScore();
+        display.setText(Integer.toString(ScoreDAO.getCurrentScore()));
     }
 
     public Label getDisplay() {
