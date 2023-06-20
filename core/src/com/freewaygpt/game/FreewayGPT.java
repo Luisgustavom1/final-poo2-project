@@ -15,12 +15,17 @@ import com.freewaygpt.game.director.GameDirector;
 import com.freewaygpt.game.entity.*;
 
 public class FreewayGPT extends ApplicationAdapter {
+	ShapeRenderer centerLineTop;
+	ShapeRenderer centerLineBottom;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
 	FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
 
 	@Override
 	public void create() {
+		centerLineTop = new ShapeRenderer();
+		centerLineBottom = new ShapeRenderer();
+
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
 
@@ -28,13 +33,11 @@ public class FreewayGPT extends ApplicationAdapter {
 	public void render() {
 		ScreenUtils.clear(Colors.getStreet());
 
-		ShapeRenderer centerLineTop = new ShapeRenderer();
 		centerLineTop.begin(ShapeRenderer.ShapeType.Filled);
 		centerLineTop.setColor(Colors.getPrimary());
 		centerLineTop.rect(0, ((float) Gdx.graphics.getHeight() / 2) - 4, Gdx.graphics.getWidth(), 3);
 		centerLineTop.end();
 
-		ShapeRenderer centerLineBottom = new ShapeRenderer();
 		centerLineBottom.begin(ShapeRenderer.ShapeType.Filled);
 		centerLineBottom.setColor(Colors.getPrimary());
 		centerLineBottom.rect(0, ((float) Gdx.graphics.getHeight() / 2) + 4, Gdx.graphics.getWidth(), 3);
@@ -51,15 +54,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			game.getChicken().y += 200 * Gdx.graphics.getDeltaTime();
 		}
 
-		// mechanics to reset position of chicken
-		// when chicken arrive in sidewalk "end" or top
-		// Observable, to verify if chicken arrive in sidewalk "end" or top
-		Vector3 posEnd = new Vector3();
-		Vector3 posChicken = new Vector3();
-		posEnd.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 36, 0);
-		posChicken.set(game.getChicken().getX(), game.getChicken().getY(), 0);
-
-		if(posEnd.y - posChicken.y < 20){
+		if(game.getSidewalks().get("end").getYStart() - game.getChicken().getY() < 20){
 			game.getEvents().notify("end");
 //			game.getScore().increment();
 		}

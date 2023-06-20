@@ -63,6 +63,10 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
         return cars;
     }
 
+    public Sidewalks getSidewalks() {
+        return sidewalks;
+    }
+
     public ObserverManager getEvents() {
         return events;
     }
