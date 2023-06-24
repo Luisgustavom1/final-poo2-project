@@ -1,7 +1,5 @@
 package com.freewaygpt.game;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,9 +10,15 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
-import com.freewaygpt.game.entity.*;
+import com.freewaygpt.game.entity.Car;
+import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.theokanning.openai.OpenAiService;
+import com.theokanning.openai.completion.CompletionRequest;
+
+import java.util.Iterator;
 
 public class FreewayGPT extends ApplicationAdapter {
+	private Boolean isPaused = false;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
 	FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
@@ -41,6 +45,15 @@ public class FreewayGPT extends ApplicationAdapter {
 		centerLineBottom.end();
 
 		game.render();
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			// Pause the game when the 'P' key is pressed
+			pause();
+		}
+
+		if (isPaused) {
+			return;
+		}
 
 		// mechanics to chicken move
 		// we can adjust velocity to up or down
@@ -100,6 +113,21 @@ public class FreewayGPT extends ApplicationAdapter {
 //				game.getScore().reset();
 				game.getChicken().setY(20);
 			}
+		}
+	}
+
+	public void pause() {
+		this.isPaused = !this.isPaused;
+
+		if (isPaused) {
+			OpenAiService service = new OpenAiService("your_token");
+			CompletionRequest completionRequest = CompletionRequest.builder()
+					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
+							"\n" +
+							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
+					.model("gpt-3.5-turbo")
+					.echo(true)
+					.build();
 		}
 	}
 
