@@ -1,32 +1,31 @@
 package com.freewaygpt.game;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
-import com.freewaygpt.game.entity.*;
-import com.theokanning.openai.OpenAiService;
+import com.freewaygpt.game.entity.Car;
+import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.theokanning.openai.completion.CompletionChoice;
+import com.theokanning.openai.service.OpenAiService;
 import com.theokanning.openai.completion.CompletionRequest;
 
+import java.util.Iterator;
+
 public class FreewayGPT extends ApplicationAdapter {
-	ShapeRenderer centerLineTop;
-	ShapeRenderer centerLineBottom;
+	private Boolean isPaused = false;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
 	FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
 
 	@Override
 	public void create() {
-		centerLineTop = new ShapeRenderer();
-		centerLineBottom = new ShapeRenderer();
-
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
 
@@ -34,17 +33,28 @@ public class FreewayGPT extends ApplicationAdapter {
 	public void render() {
 		ScreenUtils.clear(Colors.getStreet());
 
+		ShapeRenderer centerLineTop = new ShapeRenderer();
 		centerLineTop.begin(ShapeRenderer.ShapeType.Filled);
 		centerLineTop.setColor(Colors.getPrimary());
 		centerLineTop.rect(0, ((float) Gdx.graphics.getHeight() / 2) - 4, Gdx.graphics.getWidth(), 3);
 		centerLineTop.end();
 
+		ShapeRenderer centerLineBottom = new ShapeRenderer();
 		centerLineBottom.begin(ShapeRenderer.ShapeType.Filled);
 		centerLineBottom.setColor(Colors.getPrimary());
 		centerLineBottom.rect(0, ((float) Gdx.graphics.getHeight() / 2) + 4, Gdx.graphics.getWidth(), 3);
 		centerLineBottom.end();
 
 		game.render();
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			// Pause the game when the 'P' key is pressed
+			pause();
+		}
+
+		if (isPaused) {
+			return;
+		}
 
 		// mechanics to chicken move
 		// we can adjust velocity to up or down
@@ -55,9 +65,20 @@ public class FreewayGPT extends ApplicationAdapter {
 			game.getChicken().y += 200 * Gdx.graphics.getDeltaTime();
 		}
 
-		if(game.getSidewalks().get("end").getYStart() - game.getChicken().getY() < 20){
-			game.getEvents().notify("end");
+		// mechanics to reset position of chicken
+		// when chicken arrive in sidewalk "end" or top
+		// Observable, to verify if chicken arrive in sidewalk "end" or top
+		Vector3 posEnd = new Vector3();
+		Vector3 posChicken = new Vector3();
+		posEnd.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 36, 0);
+		posChicken.set(game.getChicken().getX(), game.getChicken().getY(), 0);
+
+		if(posEnd.y - posChicken.y < 20){
+			Vector3 touchPos = new Vector3();
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			game.getCamera().unproject(touchPos);
 			game.getScore().increment();
+			game.getChicken().setY(20);
 		}
 
 		// make sure the chicken stays within the screen bounds
@@ -90,8 +111,28 @@ public class FreewayGPT extends ApplicationAdapter {
 				iterator.remove();
 			}
 			if(car.overlaps(game.getChicken())){
-				game.getEvents().notify("colision");
-				game.getScore().reset();
+//				game.getScore().reset();
+				game.getChicken().setY(20);
+			}
+		}
+	}
+
+	public void pause() {
+		this.isPaused = !this.isPaused;
+
+		if (isPaused) {
+			System.out.println("oi");
+			OpenAiService service = new OpenAiService("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");
+			CompletionRequest completionRequest = CompletionRequest.builder()
+					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
+							"\n" +
+							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
+					.model("gpt-3.5-turbo")
+					.echo(true)
+					.build();
+
+			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
+				System.out.println(a);
 			}
 		}
 	}
