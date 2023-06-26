@@ -83,7 +83,7 @@ public class FreewayGPT extends ApplicationAdapter {
 		// moving the cars with Iterator
 		for(Iterator<Car> iterator = game.getCars().cars.iterator(); iterator.hasNext();){
 			Car car = iterator.next();
-			car.x += 200 * Gdx.graphics.getDeltaTime();
+			car.move();
 
 			if(car.getX() < 0){
 				iterator.remove();

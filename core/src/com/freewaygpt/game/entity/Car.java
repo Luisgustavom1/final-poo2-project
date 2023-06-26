@@ -53,4 +53,8 @@ public class Car extends Rectangle{
     public boolean overlaps(Chicken chicken){
         return x < chicken.getX() + chicken.width && x + width > chicken.getX() && y < chicken.getY() + chicken.height && y + height > chicken.getY();
     }
+
+    public void move(){
+        x += 200 * Gdx.graphics.getDeltaTime();
+    }
 }
