@@ -88,7 +88,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			if(car.getX() < 0){
 				iterator.remove();
 			}
-			if(car.overlaps(game.getChicken())){
+			if(car.isCrashed(game.getChicken())){
 				game.getEvents().notify("colision");
 				game.getScore().reset();
 			}
