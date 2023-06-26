@@ -6,17 +6,20 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
 import com.freewaygpt.game.entity.*;
+import com.theokanning.openai.completion.CompletionChoice;
+import com.theokanning.openai.service.OpenAiService;
+import com.theokanning.openai.completion.CompletionRequest;
 
 public class FreewayGPT extends ApplicationAdapter {
 	ShapeRenderer centerLineTop;
 	ShapeRenderer centerLineBottom;
+	private Boolean isPaused = false;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
 	FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
@@ -44,6 +47,15 @@ public class FreewayGPT extends ApplicationAdapter {
 		centerLineBottom.end();
 
 		game.render();
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			// Pause the game when the 'P' key is pressed
+			pause();
+		}
+
+		if (isPaused) {
+			return;
+		}
 
 		// mechanics to chicken move
 		// we can adjust velocity to up or down
@@ -91,6 +103,26 @@ public class FreewayGPT extends ApplicationAdapter {
 			if(car.overlaps(game.getChicken())){
 				game.getEvents().notify("colision");
 				game.getScore().reset();
+			}
+		}
+	}
+
+	public void pause() {
+		this.isPaused = !this.isPaused;
+
+		if (isPaused) {
+			System.out.println("oi");
+			OpenAiService service = new OpenAiService("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");
+			CompletionRequest completionRequest = CompletionRequest.builder()
+					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
+							"\n" +
+							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
+					.model("gpt-3.5-turbo")
+					.echo(true)
+					.build();
+
+			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
+				System.out.println(a);
 			}
 		}
 	}
