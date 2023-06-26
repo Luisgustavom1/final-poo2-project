@@ -48,10 +48,10 @@ public class FreewayGPT extends ApplicationAdapter {
 		// mechanics to chicken move
 		// we can adjust velocity to up or down
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			game.getChicken().y -= 200 * Gdx.graphics.getDeltaTime();
+			game.getChicken().moveDown();
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			game.getChicken().y += 200 * Gdx.graphics.getDeltaTime();
+			game.getChicken().moveUp();
 		}
 
 		if(game.getSidewalks().get("end").getYStart() - game.getChicken().getY() < 20){
@@ -83,12 +83,12 @@ public class FreewayGPT extends ApplicationAdapter {
 		// moving the cars with Iterator
 		for(Iterator<Car> iterator = game.getCars().cars.iterator(); iterator.hasNext();){
 			Car car = iterator.next();
-			car.x += 200 * Gdx.graphics.getDeltaTime();
+			car.move();
 
 			if(car.getX() < 0){
 				iterator.remove();
 			}
-			if(car.overlaps(game.getChicken())){
+			if(car.isCrashed(game.getChicken())){
 				game.getEvents().notify("colision");
 				game.getScore().reset();
 			}

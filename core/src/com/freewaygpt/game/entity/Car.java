@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.freewaygpt.game.components.ChickenComponent;
 
 public class Car extends Rectangle{
     public float x;
@@ -50,7 +51,11 @@ public class Car extends Rectangle{
         return time;
     }
 
-    public boolean overlaps(Chicken chicken){
+    public boolean isCrashed(Chicken chicken){
         return x < chicken.getX() + chicken.width && x + width > chicken.getX() && y < chicken.getY() + chicken.height && y + height > chicken.getY();
+    }
+
+    public void move(){
+        x += 200 * Gdx.graphics.getDeltaTime();
     }
 }
