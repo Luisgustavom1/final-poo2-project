@@ -24,6 +24,8 @@ public class QuestionModal implements Rendable {
     private Label question;
     private ArrayList<Label> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
+    int maxLineLength = 52;
+
     public QuestionModal() {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -104,13 +106,26 @@ public class QuestionModal implements Rendable {
     }
 
     public void writeQuestion(String questionText) {
-        question.setText(questionText);
+        question.setText(breakTextByMaxLength(questionText));
     }
 
     public void writeAnswers(String[] answersText) {
         for (int c = 0; c < answers.size(); c++) {
-            answers.get(c).setText(answersEnum[c] + " " + answersText[c]);
+            answers.get(c).setText(answersEnum[c] + " " + breakTextByMaxLength(answersText[c]));
         }
+    }
+
+    public String breakTextByMaxLength(String text) {
+//        String textUpdated = "";
+//
+//        for (int i = 0; i < text.length(); i++) {
+//            if (i != 0 && i % maxLineLength == 0) {
+//                System.out.println("oiioioi -> " + i);
+//                textUpdated += text.charAt(i) + "\n";
+//            }
+//        }
+
+        return text;
     }
 
     @Override

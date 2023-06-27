@@ -57,7 +57,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			String[] answers = {"map", "reduce", "filter",  "forEach"};
 
 			questionModal.render();
-			questionModal.writeQuestion("Qual dos seguintes métodos é utilizado para aplicar uma função a cada elemento de uma lista em programação funcional?");
+			questionModal.writeQuestion("Qual dos seguintes métodos é utilizado para aplicar \n uma função a cada elemento de uma lista em \n programação funcional?");
 			questionModal.writeAnswers(answers);
 			return;
 		}
