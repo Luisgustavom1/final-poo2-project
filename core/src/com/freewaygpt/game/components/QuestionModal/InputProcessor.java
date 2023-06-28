@@ -4,14 +4,14 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.freewaygpt.game.components.Camera;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class InputProcessor extends InputAdapter {
-    private ArrayList<Rectangle> rectangles;
+    private HashMap<Rectangle, Answer> answers;
     private Camera camera;
 
-    public InputProcessor(ArrayList<Rectangle> rectangles, Camera camera) {
-        this.rectangles = rectangles;
+    public InputProcessor(HashMap<Rectangle, Answer> answers, Camera camera) {
+        this.answers = answers;
         this.camera = camera;
     }
 
@@ -20,9 +20,9 @@ public class InputProcessor extends InputAdapter {
         Vector3 touchPoint = new Vector3(screenX, screenY, 0);
         camera.unproject(touchPoint);
 
-        for (Rectangle rectangle : rectangles) {
-            if (rectangle.contains(touchPoint.x, touchPoint.y)) {
-                System.out.println(rectangle);
+        for (Rectangle answerSelected : answers.keySet()) {
+            if (answerSelected.contains(touchPoint.x, touchPoint.y)) {
+                System.out.println(answers.get(answerSelected));
             }
         }
 

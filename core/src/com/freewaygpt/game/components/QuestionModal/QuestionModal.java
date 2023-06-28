@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.freewaygpt.game.components.Camera;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.entity.Rendable;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class QuestionModal implements Rendable {
     private Color baseColor = Color.BLACK;
@@ -20,17 +20,15 @@ public class QuestionModal implements Rendable {
     private ShapeRenderer shapeRenderer;
     private BitmapFont font;
     private Label question;
-    private ArrayList<Answer> answers;
+    private HashMap<Rectangle, Answer> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
     private int maxLineLength = 44;
-    private ArrayList<Rectangle> rectangles;
     private Camera camera;
 
     public QuestionModal() {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        answers = new ArrayList<Answer>();
-        rectangles = new ArrayList<>();
+        answers = new HashMap();
 
         camera = new Camera();
         camera.render();
@@ -60,8 +58,10 @@ public class QuestionModal implements Rendable {
         for (int c = 0; c < answersEnum.length; c++) {
             Answer answer = new Answer("", font);
             answer.setPosition(128, 128 + 64 * (4 - c));
-            answers.add(c, answer);
-            rectangles.add(new Rectangle(128, 110 + 64 * (4 - c), 750, 30));
+
+            Rectangle rectangle = new Rectangle(128, 110 + 64 * (4 - c), 750, 30);
+
+            answers.put(rectangle, answer);
         }
     }
 
@@ -77,7 +77,7 @@ public class QuestionModal implements Rendable {
 
         spriteBatch.begin();
         question.draw(spriteBatch, 1.0f);
-        for (Answer answer : answers) {
+        for (Answer answer : answers.values()) {
             answer.draw(spriteBatch, 1.0f);
         }
         spriteBatch.end();
@@ -95,7 +95,7 @@ public class QuestionModal implements Rendable {
 
         shapeRenderer.rect(padding, padding, Gdx.graphics.getWidth() - sizeBase, Gdx.graphics.getHeight() - sizeBase);
 
-        for(Rectangle rectangle : rectangles){
+        for(Rectangle rectangle : answers.keySet()){
             shapeRenderer.setColor(0, 0, 0, 0);
             shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
         }
@@ -106,8 +106,11 @@ public class QuestionModal implements Rendable {
     }
 
     public void writeAnswers(String[] answersText) {
-        for (int c = 0; c < answers.size(); c++) {
-            answers.get(c).setText(answersEnum[c] + " " + breakTextByLength(answersText[c]));
+        int c = 0;
+
+        for (Answer answer: answers.values()) {
+            answer.setText(answersEnum[c] + " " + breakTextByLength(answersText[c]));
+            c++;
         }
     }
 
@@ -126,7 +129,7 @@ public class QuestionModal implements Rendable {
     }
 
     public void choiceAnswer(){
-        InputProcessor inputProcessor = new InputProcessor(rectangles, camera);
+        InputProcessor inputProcessor = new InputProcessor(answers, camera);
         Gdx.input.setInputProcessor(inputProcessor);
     }
 
