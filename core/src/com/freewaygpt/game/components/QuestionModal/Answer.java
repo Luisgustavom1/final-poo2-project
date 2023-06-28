@@ -1,4 +1,4 @@
-package com.freewaygpt.game.components.QuestionModal.QuestionModal;
+package com.freewaygpt.game.components.QuestionModal;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

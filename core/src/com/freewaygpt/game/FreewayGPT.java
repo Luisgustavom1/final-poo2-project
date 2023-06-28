@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
-import com.freewaygpt.game.components.QuestionModal.QuestionModal.QuestionModal;
+import com.freewaygpt.game.components.QuestionModal.QuestionModal;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
 import com.freewaygpt.game.observer.publishers.UserInputProcessor;
