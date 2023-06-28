@@ -45,9 +45,7 @@ public class QuestionModal implements Rendable {
     }
 
     private void createQuestionLabel() {
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = font;
-        question = new Label("", style);
+        question = new Question("", font);
         question.setPosition(128, Gdx.graphics.getHeight() - 156);
     }
 
