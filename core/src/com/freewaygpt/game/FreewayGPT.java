@@ -11,24 +11,24 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
-import com.freewaygpt.game.entity.*;
-import com.theokanning.openai.completion.CompletionChoice;
-import com.theokanning.openai.service.OpenAiService;
-import com.theokanning.openai.completion.CompletionRequest;
+import com.freewaygpt.game.components.QuestionModal.QuestionModal;
+import com.freewaygpt.game.entity.Car;
+import com.freewaygpt.game.entity.FreewayGPTBuilder;
 
 public class FreewayGPT extends ApplicationAdapter {
-	ShapeRenderer centerLineTop;
-	ShapeRenderer centerLineBottom;
+	private ShapeRenderer centerLineTop;
+	private ShapeRenderer centerLineBottom;
 	private Boolean isPaused = false;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
-	FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
+	private FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
+	private QuestionModal questionModal;
 
 	@Override
 	public void create() {
 		centerLineTop = new ShapeRenderer();
 		centerLineBottom = new ShapeRenderer();
-
+		questionModal = new QuestionModal();
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
 
@@ -54,6 +54,12 @@ public class FreewayGPT extends ApplicationAdapter {
 		}
 
 		if (isPaused) {
+			String[] answers = {"map", "reduce", "filter",  "forEach"};
+
+			questionModal.render();
+			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
+			questionModal.writeAnswers(answers);
+			questionModal.choiceAnswer();
 			return;
 		}
 
@@ -111,19 +117,18 @@ public class FreewayGPT extends ApplicationAdapter {
 		this.isPaused = !this.isPaused;
 
 		if (isPaused) {
-			System.out.println("oi");
-			OpenAiService service = new OpenAiService("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");
-			CompletionRequest completionRequest = CompletionRequest.builder()
-					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
-							"\n" +
-							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
-					.model("gpt-3.5-turbo")
-					.echo(true)
-					.build();
-
-			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
-				System.out.println(a);
-			}
+//			OpenAiService service = new OpenAiService("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");
+//			CompletionRequest completionRequest = CompletionRequest.builder()
+//					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
+//							"\n" +
+//							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
+//					.model("gpt-3.5-turbo")
+//					.echo(true)
+//					.build();
+//
+//			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
+//				System.out.println(a);
+//			}
 		}
 	}
 
