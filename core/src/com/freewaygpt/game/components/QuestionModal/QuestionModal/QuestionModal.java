@@ -1,10 +1,7 @@
-package com.freewaygpt.game.elements.QuestionModal;
+package com.freewaygpt.game.components.QuestionModal.QuestionModal;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -22,18 +19,18 @@ public class QuestionModal implements Rendable {
     private ShapeRenderer shapeRenderer;
     private BitmapFont font;
     private Label question;
-    private ArrayList<Label> answers;
+    private ArrayList<Answer> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
-    private int maxLineLength = 58;
+    private int maxLineLength = 44;
 
     public QuestionModal() {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        answers = new ArrayList<Label>();
+        answers = new ArrayList<Answer>();
 
         generateFont();
         createQuestionLabel();
-        createAnswersLabel();
+        positionTheAnswers();
     }
 
     private void generateFont() {
@@ -51,37 +48,13 @@ public class QuestionModal implements Rendable {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = font;
         question = new Label("", style);
-        question.setPosition(128, Gdx.graphics.getHeight() - 128);
+        question.setPosition(128, Gdx.graphics.getHeight() - 156);
     }
 
-    private void createAnswersLabel() {
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = font;
-
+    private void positionTheAnswers() {
         for (int c = 0; c < answersEnum.length; c++) {
-            final Label answer = new Label("", style);
-            answer.setPosition(128, 128 + 64 * c);
-
-            answer.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    // Handle the click on the answer
-                    System.out.println(answer.getText().toString());
-                }
-
-                @Override
-                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    // Set hover opacity
-                    answer.getColor().a = 0.5f;
-                }
-
-                @Override
-                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                    // Reset opacity on hover exit
-                    answer.getColor().a = 1.0f;
-                }
-            });
-
+            Answer answer = new Answer("", font);
+            answer.setPosition(128, 128 + 64 * (4 - c));
             answers.add(c, answer);
         }
     }
@@ -92,14 +65,16 @@ public class QuestionModal implements Rendable {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         paintModal();
-        question.draw(spriteBatch, 1.0f);
-        for (Label answer : answers) {
-            answer.draw(spriteBatch, 1.0f);
-        }
 
         shapeRenderer.end();
         spriteBatch.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        spriteBatch.begin();
+        question.draw(spriteBatch, 1.0f);
+        for (Answer answer : answers) {
+            answer.draw(spriteBatch, 1.0f);
+        }
+        spriteBatch.end();
     }
 
     private void paintModal() {
@@ -131,8 +106,8 @@ public class QuestionModal implements Rendable {
         for (int c = 0; c < text.length(); c++) {
             textUpdated += text.charAt(c);
 
-            if (c % maxLineLength == 0 && c != 0) {
-                textUpdated += text.charAt(c) + "_\n";
+            if ((c + 1) % maxLineLength == 0 && c != 0) {
+                textUpdated += text.charAt(c) + "-\n";
             }
         }
 
@@ -142,6 +117,5 @@ public class QuestionModal implements Rendable {
     @Override
     public void dispose() {
         font.dispose();
-//        fontGenerator.dispose();
     }
 }

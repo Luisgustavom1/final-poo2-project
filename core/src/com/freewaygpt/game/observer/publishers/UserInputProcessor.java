@@ -1,25 +1,37 @@
 package com.freewaygpt.game.observer.publishers;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 
-public class InputProcessor extends InputAdapter {
-    @Override
-    public boolean keyDown(int keycode) {
-        // Handle key down events
-        if (keycode == Keys.SPACE) {
-            // Example: Space key is pressed
-            return true; // Return true to indicate the event is handled
-        }
-        return false; // Return false if the event is not handled
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        // Handle key up events
+public class UserInputProcessor extends InputAdapter {
+    public boolean keyDown (int keycode) {
         return false;
     }
 
-    // Override other necessary methods such as touch events, mouse events, etc.
+    public boolean keyUp (int keycode) {
+        return false;
+    }
+
+    public boolean keyTyped (char character) {
+        return false;
+    }
+
+    public boolean touchDown (int x, int y, int pointer, int button) {
+        return false;
+    }
+
+    public boolean touchUp (int x, int y, int pointer, int button) {
+        return false;
+    }
+
+    public boolean touchDragged (int x, int y, int pointer) {
+        return false;
+    }
+
+    public boolean mouseMoved (int x, int y) {
+        return false;
+    }
+
+    public boolean scrolled (float amountX, float amountY) {
+        return false;
+    }
 }

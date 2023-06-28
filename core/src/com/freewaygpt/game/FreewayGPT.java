@@ -11,9 +11,10 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
-import com.freewaygpt.game.elements.QuestionModal.QuestionModal;
+import com.freewaygpt.game.components.QuestionModal.QuestionModal.QuestionModal;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.freewaygpt.game.observer.publishers.UserInputProcessor;
 
 public class FreewayGPT extends ApplicationAdapter {
 	private ShapeRenderer centerLineTop;
@@ -30,6 +31,8 @@ public class FreewayGPT extends ApplicationAdapter {
 		centerLineBottom = new ShapeRenderer();
 		questionModal = new QuestionModal();
 		gameDirector.buildFreewayGPT(gameBuilder);
+
+		Gdx.input.setInputProcessor(new UserInputProcessor());
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			String[] answers = {"map", "reduce", "filter",  "forEach"};
 
 			questionModal.render();
-			questionModal.writeQuestion("Qual dos seguintes métodos é utilizado para aplicar \n uma função a cada elemento de uma lista em \n programação funcional?");
+			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
 			questionModal.writeAnswers(answers);
 			return;
 		}
