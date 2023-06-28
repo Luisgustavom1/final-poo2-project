@@ -2,15 +2,16 @@ package com.freewaygpt.game.components.QuestionModal;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.freewaygpt.game.components.Camera;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.entity.Rendable;
-
 import java.util.ArrayList;
 
 public class QuestionModal implements Rendable {
@@ -22,11 +23,17 @@ public class QuestionModal implements Rendable {
     private ArrayList<Answer> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
     private int maxLineLength = 44;
+    private ArrayList<Rectangle> rectangles;
+    private Camera camera;
 
     public QuestionModal() {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         answers = new ArrayList<Answer>();
+        rectangles = new ArrayList<>();
+
+        camera = new Camera();
+        camera.render();
 
         generateFont();
         createQuestionLabel();
@@ -54,6 +61,7 @@ public class QuestionModal implements Rendable {
             Answer answer = new Answer("", font);
             answer.setPosition(128, 128 + 64 * (4 - c));
             answers.add(c, answer);
+            rectangles.add(new Rectangle(128, 110 + 64 * (4 - c), 750, 30));
         }
     }
 
@@ -86,6 +94,11 @@ public class QuestionModal implements Rendable {
         shapeRenderer.setColor(modalColor);
 
         shapeRenderer.rect(padding, padding, Gdx.graphics.getWidth() - sizeBase, Gdx.graphics.getHeight() - sizeBase);
+
+        for(Rectangle rectangle : rectangles){
+            shapeRenderer.setColor(0, 0, 0, 0);
+            shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        }
     }
 
     public void writeQuestion(String questionText) {
@@ -112,8 +125,16 @@ public class QuestionModal implements Rendable {
         return textUpdated;
     }
 
+    public void choiceAnswer(){
+        InputProcessor inputProcessor = new InputProcessor(rectangles, camera);
+        Gdx.input.setInputProcessor(inputProcessor);
+    }
+
     @Override
     public void dispose() {
         font.dispose();
+        spriteBatch.dispose();
+        shapeRenderer.dispose();
+        camera.dispose();
     }
 }

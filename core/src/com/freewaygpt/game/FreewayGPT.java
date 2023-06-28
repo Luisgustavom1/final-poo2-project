@@ -62,11 +62,14 @@ public class FreewayGPT extends ApplicationAdapter {
 			questionModal.render();
 			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
 			questionModal.writeAnswers(answers);
+			questionModal.choiceAnswer();
 			return;
 		}
 
-		// mechanics to chicken move
-		// we can adjust velocity to up or down
+		/**
+		 * Mechanics to chicken move
+		 * we can adjust velocity to up or down
+		 */
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			game.getChicken().y -= 200 * Gdx.graphics.getDeltaTime();
 		}
@@ -119,7 +122,6 @@ public class FreewayGPT extends ApplicationAdapter {
 		this.isPaused = !this.isPaused;
 
 		if (isPaused) {
-			System.out.println("oi");
 //			OpenAiService service = new OpenAiService("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");
 //			CompletionRequest completionRequest = CompletionRequest.builder()
 //					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
