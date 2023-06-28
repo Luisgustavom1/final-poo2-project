@@ -12,12 +12,13 @@ import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
 import com.freewaygpt.game.components.QuestionModal.QuestionModal;
+import com.freewaygpt.game.elements.CenterLine;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
 
 public class FreewayGPT extends ApplicationAdapter {
-	private ShapeRenderer centerLineTop;
-	private ShapeRenderer centerLineBottom;
+	private CenterLine centerLineTop;
+	private CenterLine centerLineBottom;
 	private Boolean isPaused = false;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
@@ -26,8 +27,8 @@ public class FreewayGPT extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-		centerLineTop = new ShapeRenderer();
-		centerLineBottom = new ShapeRenderer();
+		centerLineTop = new CenterLine();
+		centerLineBottom = new CenterLine();
 		questionModal = new QuestionModal();
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
@@ -36,20 +37,12 @@ public class FreewayGPT extends ApplicationAdapter {
 	public void render() {
 		ScreenUtils.clear(Colors.getStreet());
 
-		centerLineTop.begin(ShapeRenderer.ShapeType.Filled);
-		centerLineTop.setColor(Colors.getPrimary());
-		centerLineTop.rect(0, ((float) Gdx.graphics.getHeight() / 2) - 4, Gdx.graphics.getWidth(), 3);
-		centerLineTop.end();
-
-		centerLineBottom.begin(ShapeRenderer.ShapeType.Filled);
-		centerLineBottom.setColor(Colors.getPrimary());
-		centerLineBottom.rect(0, ((float) Gdx.graphics.getHeight() / 2) + 4, Gdx.graphics.getWidth(), 3);
-		centerLineBottom.end();
+		centerLineTop.renderWithOffset(4);
+		centerLineBottom.renderWithOffset(-4);
 
 		game.render();
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			// Pause the game when the 'P' key is pressed
 			pause();
 		}
 
@@ -63,8 +56,6 @@ public class FreewayGPT extends ApplicationAdapter {
 			return;
 		}
 
-		// mechanics to chicken move
-		// we can adjust velocity to up or down
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			game.getChicken().moveDown();
 		}
@@ -77,18 +68,9 @@ public class FreewayGPT extends ApplicationAdapter {
 			game.getScore().increment();
 		}
 
-		// make sure the chicken stays within the screen bounds
 		if(game.getChicken().getY() < 0) game.getChicken().setY(0);
 		if(game.getChicken().getY() > 640) game.getChicken().setY(640);
 
-		/**
-		 * we use to create a new car
-		 * 54 - 191
-		 * 199 - 328
-		 * 336 - 465
-		 * 473 - 570
-		 * (int)Math.floor(Math.random() * (max - min + 1) + min)
-		 */
 		for(int i = 1; i <= 4; i++){
 			if(TimeUtils.nanoTime() - Car.time() > Math.pow(10, (int)(Math.random()*(8)+9))){
 				game.getCars().cars.add(new Car((int)Math.floor(Math.random() * (191 - 54 + 1) + 54)));
@@ -98,7 +80,6 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 		}
 
-		// moving the cars with Iterator
 		for(Iterator<Car> iterator = game.getCars().cars.iterator(); iterator.hasNext();){
 			Car car = iterator.next();
 			car.move();
