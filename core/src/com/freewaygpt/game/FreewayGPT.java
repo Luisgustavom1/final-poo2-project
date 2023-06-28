@@ -14,7 +14,6 @@ import com.freewaygpt.game.director.GameDirector;
 import com.freewaygpt.game.components.QuestionModal.QuestionModal;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
-import com.freewaygpt.game.observer.publishers.UserInputProcessor;
 
 public class FreewayGPT extends ApplicationAdapter {
 	private ShapeRenderer centerLineTop;
@@ -31,8 +30,6 @@ public class FreewayGPT extends ApplicationAdapter {
 		centerLineBottom = new ShapeRenderer();
 		questionModal = new QuestionModal();
 		gameDirector.buildFreewayGPT(gameBuilder);
-
-		Gdx.input.setInputProcessor(new UserInputProcessor());
 	}
 
 	@Override
@@ -66,10 +63,8 @@ public class FreewayGPT extends ApplicationAdapter {
 			return;
 		}
 
-		/**
-		 * Mechanics to chicken move
-		 * we can adjust velocity to up or down
-		 */
+		// mechanics to chicken move
+		// we can adjust velocity to up or down
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			game.getChicken().y -= 200 * Gdx.graphics.getDeltaTime();
 		}
