@@ -11,10 +11,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.freewaygpt.game.components.Camera;
 import com.freewaygpt.game.design.Colors;
+import com.freewaygpt.game.entity.FreewayGPTBuilder;
 import com.freewaygpt.game.entity.Rendable;
 import java.util.HashMap;
 
 public class QuestionModal implements Rendable {
+    private FreewayGPTBuilder game;
     private Color baseColor = Color.BLACK;
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
@@ -22,10 +24,12 @@ public class QuestionModal implements Rendable {
     private Label question;
     private HashMap<Rectangle, Answer> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
-    private int maxLineLength = 44;
+    private int maxLineLength = 38;
     private Camera camera;
+    private int correctAnswer;
 
-    public QuestionModal() {
+    public QuestionModal(FreewayGPTBuilder game) {
+        this.game = game;
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         answers = new HashMap();
@@ -56,7 +60,7 @@ public class QuestionModal implements Rendable {
 
     private void positionTheAnswers() {
         for (int c = 0; c < answersEnum.length; c++) {
-            Answer answer = new Answer("", font);
+            Answer answer = new Answer("", font, c);
             answer.setPosition(128, 128 + 64 * (4 - c));
 
             Rectangle rectangle = new Rectangle(128, 110 + 64 * (4 - c), 750, 30);
@@ -81,6 +85,8 @@ public class QuestionModal implements Rendable {
             answer.draw(spriteBatch, 1.0f);
         }
         spriteBatch.end();
+
+        choiceAnswer();
     }
 
     private void paintModal() {
@@ -105,7 +111,8 @@ public class QuestionModal implements Rendable {
         question.setText(breakTextByLength(questionText));
     }
 
-    public void writeAnswers(String[] answersText) {
+    public void writeAnswers(String[] answersText, int correctAnswer) {
+        this.correctAnswer = correctAnswer;
         int c = 0;
 
         for (Answer answer: answers.values()) {
@@ -129,8 +136,33 @@ public class QuestionModal implements Rendable {
     }
 
     public void choiceAnswer(){
-        InputProcessor inputProcessor = new InputProcessor(answers, camera);
+        InputProcessor inputProcessor = new InputProcessor(answers, camera, this);
         Gdx.input.setInputProcessor(inputProcessor);
+    }
+
+    public void answerQuestion(Rectangle answerSelected) {
+        int answerSelectedIndex = searchAnswerIndexByRectangle(answerSelected);
+
+        if (!(answerSelectedIndex == correctAnswer)) {
+            game.getScore().reset();
+        }
+
+        game.pause();
+    }
+
+    public int searchAnswerIndexByRectangle(Rectangle rectangle) {
+        int index = 0;
+        int answerIndex = 0;
+
+        for (Answer answer:answers.values()) {
+            if (answers.get(rectangle).isEqual(answer)) {
+                answerIndex = index;
+            }
+
+            index++;
+        }
+
+        return answerIndex;
     }
 
     @Override

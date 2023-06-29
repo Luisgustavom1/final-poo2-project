@@ -9,10 +9,12 @@ import java.util.HashMap;
 public class InputProcessor extends InputAdapter {
     private HashMap<Rectangle, Answer> answers;
     private Camera camera;
+    private QuestionModal questionModal;
 
-    public InputProcessor(HashMap<Rectangle, Answer> answers, Camera camera) {
+    public InputProcessor(HashMap<Rectangle, Answer> answers, Camera camera, QuestionModal questionModal) {
         this.answers = answers;
         this.camera = camera;
+        this.questionModal = questionModal;
     }
 
     @Override
@@ -22,7 +24,7 @@ public class InputProcessor extends InputAdapter {
 
         for (Rectangle answerSelected : answers.keySet()) {
             if (answerSelected.contains(touchPoint.x, touchPoint.y)) {
-                System.out.println(answers.get(answerSelected));
+                questionModal.answerQuestion(answerSelected);
             }
         }
 

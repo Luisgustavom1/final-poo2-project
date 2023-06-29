@@ -5,20 +5,21 @@ import java.util.Iterator;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.director.GameDirector;
 import com.freewaygpt.game.components.QuestionModal.QuestionModal;
+import com.freewaygpt.game.elements.CenterLine;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.freewaygpt.game.entity.QuestionModel;
+import com.freewaygpt.game.infra.ChatGPT;
 
 public class FreewayGPT extends ApplicationAdapter {
-	private ShapeRenderer centerLineTop;
-	private ShapeRenderer centerLineBottom;
-	private Boolean isPaused = false;
+	private CenterLine centerLineTop;
+	private CenterLine centerLineBottom;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
 	private FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
@@ -26,9 +27,9 @@ public class FreewayGPT extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-		centerLineTop = new ShapeRenderer();
-		centerLineBottom = new ShapeRenderer();
-		questionModal = new QuestionModal();
+		centerLineTop = new CenterLine();
+		centerLineBottom = new CenterLine();
+		questionModal = new QuestionModal(game);
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
 
@@ -36,35 +37,16 @@ public class FreewayGPT extends ApplicationAdapter {
 	public void render() {
 		ScreenUtils.clear(Colors.getStreet());
 
-		centerLineTop.begin(ShapeRenderer.ShapeType.Filled);
-		centerLineTop.setColor(Colors.getPrimary());
-		centerLineTop.rect(0, ((float) Gdx.graphics.getHeight() / 2) - 4, Gdx.graphics.getWidth(), 3);
-		centerLineTop.end();
-
-		centerLineBottom.begin(ShapeRenderer.ShapeType.Filled);
-		centerLineBottom.setColor(Colors.getPrimary());
-		centerLineBottom.rect(0, ((float) Gdx.graphics.getHeight() / 2) + 4, Gdx.graphics.getWidth(), 3);
-		centerLineBottom.end();
+		centerLineTop.renderWithOffset(4);
+		centerLineBottom.renderWithOffset(-4);
 
 		game.render();
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			// Pause the game when the 'P' key is pressed
-			pause();
-		}
-
-		if (isPaused) {
-			String[] answers = {"map", "reduce", "filter",  "forEach"};
-
+		if (game.isPaused) {
 			questionModal.render();
-			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
-			questionModal.writeAnswers(answers);
-			questionModal.choiceAnswer();
 			return;
 		}
 
-		// mechanics to chicken move
-		// we can adjust velocity to up or down
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			game.getChicken().moveDown();
 		}
@@ -77,18 +59,9 @@ public class FreewayGPT extends ApplicationAdapter {
 			game.getScore().increment();
 		}
 
-		// make sure the chicken stays within the screen bounds
 		if(game.getChicken().getY() < 0) game.getChicken().setY(0);
 		if(game.getChicken().getY() > 640) game.getChicken().setY(640);
 
-		/**
-		 * we use to create a new car
-		 * 54 - 191
-		 * 199 - 328
-		 * 336 - 465
-		 * 473 - 570
-		 * (int)Math.floor(Math.random() * (max - min + 1) + min)
-		 */
 		for(int i = 1; i <= 4; i++){
 			if(TimeUtils.nanoTime() - Car.time() > Math.pow(10, (int)(Math.random()*(8)+9))){
 				game.getCars().cars.add(new Car((int)Math.floor(Math.random() * (191 - 54 + 1) + 54)));
@@ -98,7 +71,6 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 		}
 
-		// moving the cars with Iterator
 		for(Iterator<Car> iterator = game.getCars().cars.iterator(); iterator.hasNext();){
 			Car car = iterator.next();
 			car.move();
@@ -108,27 +80,21 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 			if(car.isCrashed(game.getChicken())){
 				game.getEvents().notify("colision");
-				game.getScore().reset();
+				pause();
 			}
 		}
 	}
 
 	public void pause() {
-		this.isPaused = !this.isPaused;
+		game.pause();
 
-		if (isPaused) {
-//			OpenAiService service = new OpenAiService("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");
-//			CompletionRequest completionRequest = CompletionRequest.builder()
-//					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
-//							"\n" +
-//							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
-//					.model("gpt-3.5-turbo")
-//					.echo(true)
-//					.build();
-//
-//			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
-//				System.out.println(a);
-//			}
+		if (game.isPaused) {
+			ChatGPT chatGPTService = new ChatGPT();
+			QuestionModel questionModel = chatGPTService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}");
+
+			System.out.println(questionModel.answers[questionModel.correct_answer]);
+			questionModal.writeQuestion(questionModel.question);
+			questionModal.writeAnswers(questionModel.answers, questionModel.correct_answer);
 		}
 	}
 
