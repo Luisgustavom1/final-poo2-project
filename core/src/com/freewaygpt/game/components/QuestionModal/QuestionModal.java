@@ -144,11 +144,11 @@ public class QuestionModal implements Rendable {
     public void answerQuestion(Rectangle answerSelected) {
         int answerSelectedIndex = searchAnswerIndexByRectangle(answerSelected);
 
-        if (answerSelectedIndex == correctAnswer) {
-            game.pause();
-        } else {
+        if (!(answerSelectedIndex == correctAnswer)) {
             game.getScore().reset();
         }
+
+        game.pause();
     }
 
     public int searchAnswerIndexByRectangle(Rectangle rectangle) {
