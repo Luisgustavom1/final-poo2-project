@@ -92,6 +92,7 @@ public class FreewayGPT extends ApplicationAdapter {
 			ChatGPT chatGPTService = new ChatGPT();
 			QuestionModel questionModel = chatGPTService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}");
 
+			System.out.println(questionModel.answers[questionModel.correct_answer]);
 			questionModal.writeQuestion(questionModel.question);
 			questionModal.writeAnswers(questionModel.answers, questionModel.correct_answer);
 		}

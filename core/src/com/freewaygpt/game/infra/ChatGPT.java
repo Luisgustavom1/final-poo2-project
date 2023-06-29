@@ -8,7 +8,7 @@ import com.theokanning.openai.service.OpenAiService;
 
 public class ChatGPT extends OpenAiService {
     public ChatGPT() {
-        super("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");
+        super("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");
     }
 
     public QuestionModel generateQuestion(String prompt) {

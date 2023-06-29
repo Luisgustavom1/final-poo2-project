@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.components.Camera;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
@@ -25,7 +24,7 @@ public class QuestionModal implements Rendable {
     private Label question;
     private HashMap<Rectangle, Answer> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
-    private int maxLineLength = 44;
+    private int maxLineLength = 38;
     private Camera camera;
     private int correctAnswer;
 
