@@ -13,6 +13,11 @@ public class FreewayGPTBuilder implements GameBuilder, Rendable {
     private ChickenComponent chicken;
     private Cars cars;
     private ObserverManager events = new ObserverManager("end", "colision");
+    public static Boolean isPaused = false;
+
+    public static void pause() {
+        isPaused = !isPaused;
+    }
 
     public void setDAO(){
         ScoreDAO.initialize();

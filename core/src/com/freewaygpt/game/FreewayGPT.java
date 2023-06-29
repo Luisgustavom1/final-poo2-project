@@ -5,7 +5,6 @@ import java.util.Iterator;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.freewaygpt.game.builders.GameBuilder;
@@ -19,7 +18,6 @@ import com.freewaygpt.game.entity.FreewayGPTBuilder;
 public class FreewayGPT extends ApplicationAdapter {
 	private CenterLine centerLineTop;
 	private CenterLine centerLineBottom;
-	private Boolean isPaused = false;
 	private GameBuilder gameBuilder = new FreewayGPTBuilder();
 	private GameDirector gameDirector = new GameDirector();
 	private FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
@@ -29,7 +27,7 @@ public class FreewayGPT extends ApplicationAdapter {
 	public void create() {
 		centerLineTop = new CenterLine();
 		centerLineBottom = new CenterLine();
-		questionModal = new QuestionModal();
+		questionModal = new QuestionModal(game);
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
 
@@ -42,17 +40,8 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		game.render();
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			pause();
-		}
-
-		if (isPaused) {
-			String[] answers = {"map", "reduce", "filter",  "forEach"};
-
+		if (game.isPaused) {
 			questionModal.render();
-			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
-			questionModal.writeAnswers(answers);
-			questionModal.choiceAnswer();
 			return;
 		}
 
@@ -89,15 +78,15 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 			if(car.isCrashed(game.getChicken())){
 				game.getEvents().notify("colision");
-				game.getScore().reset();
+				pause();
 			}
 		}
 	}
 
 	public void pause() {
-		this.isPaused = !this.isPaused;
+		game.pause();
 
-		if (isPaused) {
+		if (game.isPaused) {
 //			OpenAiService service = new OpenAiService("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");
 //			CompletionRequest completionRequest = CompletionRequest.builder()
 //					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
@@ -110,6 +99,10 @@ public class FreewayGPT extends ApplicationAdapter {
 //			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
 //				System.out.println(a);
 //			}
+			String[] answers = {"map", "reduce", "filter",  "forEach"};
+
+			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
+			questionModal.writeAnswers(answers, 2);
 		}
 	}
 

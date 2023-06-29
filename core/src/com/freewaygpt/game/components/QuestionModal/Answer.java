@@ -8,8 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class Answer extends Label {
-    public Answer(String text, BitmapFont font) {
+    private int id;
+
+    public Answer(String text, BitmapFont font, int id) {
         super(text, new Label.LabelStyle(font, Color.WHITE));
+
+        this.id = id;
 
         this.addListener(new ClickListener() {
             @Override
@@ -32,5 +36,13 @@ public class Answer extends Label {
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
+    }
+
+    public boolean isEqual(Answer answerToCompare) {
+        return answerToCompare.getId() == id;
+    }
+
+    private int getId() {
+        return id;
     }
 }
