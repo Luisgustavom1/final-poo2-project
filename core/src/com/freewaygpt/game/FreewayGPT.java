@@ -14,6 +14,7 @@ import com.freewaygpt.game.components.QuestionModal.QuestionModal;
 import com.freewaygpt.game.elements.CenterLine;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.freewaygpt.game.entity.QuestionModel;
 import com.freewaygpt.game.infra.ChatGPT;
 
 public class FreewayGPT extends ApplicationAdapter {
@@ -89,12 +90,10 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		if (game.isPaused) {
 			ChatGPT chatGPTService = new ChatGPT();
-			chatGPTService.promptBuilder("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answer\": String[], \"correct_answer\": number}");
+			QuestionModel questionModel = chatGPTService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answer\": String[], \"correct_answer\": number}");
 
-			String[] answers = {"map", "reduce", "filter",  "forEach"};
-
-			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
-			questionModal.writeAnswers(answers, 2);
+			questionModal.writeQuestion(questionModel.question);
+			questionModal.writeAnswers(questionModel.answers, questionModel.correct_answer);
 		}
 	}
 
