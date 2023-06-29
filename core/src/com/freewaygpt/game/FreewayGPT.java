@@ -14,6 +14,7 @@ import com.freewaygpt.game.components.QuestionModal.QuestionModal;
 import com.freewaygpt.game.elements.CenterLine;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.freewaygpt.game.infra.ChatGPT;
 
 public class FreewayGPT extends ApplicationAdapter {
 	private CenterLine centerLineTop;
@@ -87,18 +88,9 @@ public class FreewayGPT extends ApplicationAdapter {
 		game.pause();
 
 		if (game.isPaused) {
-//			OpenAiService service = new OpenAiService("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");
-//			CompletionRequest completionRequest = CompletionRequest.builder()
-//					.prompt("Gerar uma pergunta sobre programação no tema de programação funcional, onde temos uma pergunta e 4 possíveis respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros.\n" +
-//							"\n" +
-//							"Gerar isso em um formato JSON, para ser agnóstico entre linguagens de programação.")
-//					.model("gpt-3.5-turbo")
-//					.echo(true)
-//					.build();
-//
-//			for (CompletionChoice a:service.createCompletion(completionRequest).getChoices()) {
-//				System.out.println(a);
-//			}
+			ChatGPT chatGPTService = new ChatGPT();
+			chatGPTService.promptBuilder("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answer\": String[], \"correct_answer\": number}");
+
 			String[] answers = {"map", "reduce", "filter",  "forEach"};
 
 			questionModal.writeQuestion("Qual dos seguintes metodos e utilizado para aplicar uma funcao a cada elemento de uma lista em programacao funcional?");
