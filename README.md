@@ -12,9 +12,12 @@ Every time the chicken collides with the car we will give you a second chance be
 
 ### Main concepts explored
 
-In the OOP course we had to build this project to show our knowledge in design patterns.
+In the OOP course we had to build this project to show our knowledge in design patterns and persistence data.
 
 3 patterns were used:
 - Observer
 - Builder
 - Strategy
+
+For persistence we use:
+- MySQL
