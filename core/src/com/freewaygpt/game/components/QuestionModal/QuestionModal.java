@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.freewaygpt.game.components.Camera;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
+import com.freewaygpt.game.entity.QuestionModel;
 import com.freewaygpt.game.entity.Rendable;
+import com.freewaygpt.game.entity.ServiceQuestion;
 import java.util.HashMap;
 
 public class QuestionModal implements Rendable {
@@ -24,12 +26,14 @@ public class QuestionModal implements Rendable {
     private Label question;
     private HashMap<Rectangle, Answer> answers;
     private String[] answersEnum = {"a)", "b)", "c)", "d)"};
-    private int maxLineLength = 38;
     private Camera camera;
+    private ServiceQuestion questionService;
+    private int maxLineLength = 38;
     private int correctAnswer;
 
-    public QuestionModal(FreewayGPTBuilder game) {
+    public QuestionModal(FreewayGPTBuilder game, ServiceQuestion generateQuestionService) {
         this.game = game;
+        this.questionService = generateQuestionService;
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         answers = new HashMap();
@@ -89,6 +93,11 @@ public class QuestionModal implements Rendable {
         choiceAnswer();
     }
 
+    public void renderWithDefaultQuestion(String defaultQuestion) {
+        writeQuestion(defaultQuestion);
+        render();
+    }
+
     private void paintModal() {
         int sizeBase = 128;
         float padding =  sizeBase/2;
@@ -121,6 +130,12 @@ public class QuestionModal implements Rendable {
         }
     }
 
+    public void clearAnswer() {
+        for (Answer answer: answers.values()) {
+            answer.setText(" ");
+        }
+    }
+
     public String breakTextByLength(String text) {
         String textUpdated = "";
 
@@ -128,7 +143,7 @@ public class QuestionModal implements Rendable {
             textUpdated += text.charAt(c);
 
             if ((c + 1) % maxLineLength == 0 && c != 0) {
-                textUpdated += text.charAt(c) + "-\n";
+                textUpdated += "-\n";
             }
         }
 
@@ -148,6 +163,7 @@ public class QuestionModal implements Rendable {
         }
 
         game.pause();
+        clearAnswer();
     }
 
     public int searchAnswerIndexByRectangle(Rectangle rectangle) {
@@ -163,6 +179,13 @@ public class QuestionModal implements Rendable {
         }
 
         return answerIndex;
+    }
+
+    public void generateQuestion() {
+        QuestionModel questionModel = questionService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}");
+
+        writeQuestion(questionModel.question);
+        writeAnswers(questionModel.answers, questionModel.correct_answer);
     }
 
     @Override
