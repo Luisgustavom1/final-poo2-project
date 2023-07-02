@@ -15,11 +15,15 @@ public class ChickenComponent extends Chicken implements Rendable, Observer {
     }
 
     public void moveDown(){
-        y -= 200 * Gdx.graphics.getDeltaTime();
+        super.moveDown();
+
+        if(getY() < 0) setY(0);
     }
 
     public void moveUp(){
-        y += 200 * Gdx.graphics.getDeltaTime();
+        super.moveUp();
+
+        if(getY() > 640) setY(640);
     }
 
     @Override

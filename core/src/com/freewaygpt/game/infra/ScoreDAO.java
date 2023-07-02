@@ -1,4 +1,4 @@
-package com.freewaygpt.game.dao;
+package com.freewaygpt.game.infra;
 
 import com.freewaygpt.game.entity.Score;
 import javax.persistence.EntityManager;
