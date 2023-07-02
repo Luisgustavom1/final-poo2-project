@@ -27,12 +27,11 @@ public class DisplayScore extends Score {
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = customFont;
-        //display = new Label(Integer.toString(this.getScore()), style);
         display = new Label(Integer.toString(ScoreDAO.getCurrentScore()), style);
     }
 
     public void render() {
-        display.setPosition(Gdx.graphics.getWidth() / 3 * 2, Gdx.graphics.getHeight() - 36);
+        display.setPosition(Gdx.graphics.getWidth() / 3 * 2, Gdx.graphics.getHeight() - 38);
     };
 
     public void increment() {

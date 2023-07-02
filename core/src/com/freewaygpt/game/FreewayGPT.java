@@ -24,6 +24,7 @@ public class FreewayGPT extends ApplicationAdapter {
 	private GameDirector gameDirector = new GameDirector();
 	private FreewayGPTBuilder game = (FreewayGPTBuilder) gameBuilder;
 	private QuestionModal questionModal;
+	private boolean shouldGenerateQuestion = false;
 
 	@Override
 	public void create() {
@@ -43,6 +44,17 @@ public class FreewayGPT extends ApplicationAdapter {
 		game.render();
 
 		if (game.isPaused) {
+			if (shouldGenerateQuestion) {
+				ChatGPT chatGPTService = new ChatGPT();
+				QuestionModel questionModel = chatGPTService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}");
+
+				System.out.println(questionModel.answers[questionModel.correct_answer]);
+				questionModal.writeQuestion(questionModel.question);
+				questionModal.writeAnswers(questionModel.answers, questionModel.correct_answer);
+
+				shouldGenerateQuestion = false;
+			}
+
 			questionModal.render();
 			return;
 		}
@@ -77,6 +89,8 @@ public class FreewayGPT extends ApplicationAdapter {
 			}
 			if(car.isCrashed(game.getChicken())){
 				game.getEvents().notify("colision");
+				questionModal.renderWithDefaultQuestion("Estamos gerando sua pergunta...");
+				shouldGenerateQuestion = true;
 				pause();
 			}
 		}
@@ -84,15 +98,6 @@ public class FreewayGPT extends ApplicationAdapter {
 
 	public void pause() {
 		game.pause();
-
-		if (game.isPaused) {
-			ChatGPT chatGPTService = new ChatGPT();
-			QuestionModel questionModel = chatGPTService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}");
-
-			System.out.println(questionModel.answers[questionModel.correct_answer]);
-			questionModal.writeQuestion(questionModel.question);
-			questionModal.writeAnswers(questionModel.answers, questionModel.correct_answer);
-		}
 	}
 
 	@Override

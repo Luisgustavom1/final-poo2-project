@@ -89,6 +89,11 @@ public class QuestionModal implements Rendable {
         choiceAnswer();
     }
 
+    public void renderWithDefaultQuestion(String defaultQuestion) {
+        writeQuestion(defaultQuestion);
+        render();
+    }
+
     private void paintModal() {
         int sizeBase = 128;
         float padding =  sizeBase/2;
@@ -121,6 +126,12 @@ public class QuestionModal implements Rendable {
         }
     }
 
+    public void clearAnswers() {
+        for (Answer answer: answers.values()) {
+            answer.setText(" ");
+        }
+    }
+
     public String breakTextByLength(String text) {
         String textUpdated = "";
 
@@ -128,7 +139,7 @@ public class QuestionModal implements Rendable {
             textUpdated += text.charAt(c);
 
             if ((c + 1) % maxLineLength == 0 && c != 0) {
-                textUpdated += text.charAt(c) + "-\n";
+                textUpdated += "-\n";
             }
         }
 
@@ -148,6 +159,7 @@ public class QuestionModal implements Rendable {
         }
 
         game.pause();
+        clearAnswers();
     }
 
     public int searchAnswerIndexByRectangle(Rectangle rectangle) {
