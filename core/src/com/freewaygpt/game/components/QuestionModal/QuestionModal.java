@@ -130,6 +130,12 @@ public class QuestionModal implements Rendable {
         }
     }
 
+    public void clearAnswer() {
+        for (Answer answer: answers.values()) {
+            answer.setText(" ");
+        }
+    }
+
     public String breakTextByLength(String text) {
         String textUpdated = "";
 
@@ -157,6 +163,7 @@ public class QuestionModal implements Rendable {
         }
 
         game.pause();
+        clearAnswer();
     }
 
     public int searchAnswerIndexByRectangle(Rectangle rectangle) {
