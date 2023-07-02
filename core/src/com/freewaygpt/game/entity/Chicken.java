@@ -38,4 +38,12 @@ public class Chicken extends Rectangle {
     public void createImage() {
         image = new Texture(Gdx.files.internal("galinha.png"));
     }
+
+    public void moveDown(){
+        y -= 200 * Gdx.graphics.getDeltaTime();
+    }
+
+    public void moveUp(){
+        y += 200 * Gdx.graphics.getDeltaTime();
+    }
 }

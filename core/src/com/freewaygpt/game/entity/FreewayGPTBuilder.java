@@ -2,7 +2,7 @@ package com.freewaygpt.game.entity;
 
 import com.freewaygpt.game.builders.GameBuilder;
 import com.freewaygpt.game.components.*;
-import com.freewaygpt.game.dao.ScoreDAO;
+import com.freewaygpt.game.infra.ScoreDAO;
 import com.freewaygpt.game.observer.publishers.ObserverManager;
 
 public class FreewayGPTBuilder implements GameBuilder, Rendable {

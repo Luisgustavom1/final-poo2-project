@@ -59,9 +59,6 @@ public class FreewayGPT extends ApplicationAdapter {
 			game.getScore().increment();
 		}
 
-		if(game.getChicken().getY() < 0) game.getChicken().setY(0);
-		if(game.getChicken().getY() > 640) game.getChicken().setY(640);
-
 		for(int i = 1; i <= 4; i++){
 			if(TimeUtils.nanoTime() - Car.time() > Math.pow(10, (int)(Math.random()*(8)+9))){
 				game.getCars().cars.add(new Car((int)Math.floor(Math.random() * (191 - 54 + 1) + 54)));

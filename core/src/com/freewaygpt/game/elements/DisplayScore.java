@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.freewaygpt.game.dao.ScoreDAO;
+import com.freewaygpt.game.infra.ScoreDAO;
 import com.freewaygpt.game.design.Colors;
 import com.freewaygpt.game.entity.Score;
 
