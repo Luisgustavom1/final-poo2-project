@@ -2,7 +2,7 @@
 
 This is a final project for the object oriented programming course at the federal university of uberlandia - UFU.
 
-In this project we build a remaster of [freeway](https://www.atari2600.com.br/Atari/Roms/01DH/Freeway), the game of chicken. But we put a touch more, we integrated our game with a generative artificial intelligence that is the fad of today.
+In this project we build a remaster of [freeway](https://www.atari2600.com.br/Atari/Roms/01DH/Freeway), the game of chicken, this time more fun, difficult and technological. But we put a touch more, we integrated our game with a generative artificial intelligence that is the fad of today.
 
 ### Where does ia come into this game? 
 
