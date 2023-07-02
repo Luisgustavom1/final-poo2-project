@@ -14,7 +14,6 @@ import com.freewaygpt.game.components.QuestionModal.QuestionModal;
 import com.freewaygpt.game.elements.CenterLine;
 import com.freewaygpt.game.entity.Car;
 import com.freewaygpt.game.entity.FreewayGPTBuilder;
-import com.freewaygpt.game.entity.QuestionModel;
 import com.freewaygpt.game.infra.ChatGPT;
 
 public class FreewayGPT extends ApplicationAdapter {
@@ -30,7 +29,7 @@ public class FreewayGPT extends ApplicationAdapter {
 	public void create() {
 		centerLineTop = new CenterLine();
 		centerLineBottom = new CenterLine();
-		questionModal = new QuestionModal(game);
+		questionModal = new QuestionModal(game, new ChatGPT());
 		gameDirector.buildFreewayGPT(gameBuilder);
 	}
 
@@ -45,13 +44,7 @@ public class FreewayGPT extends ApplicationAdapter {
 
 		if (game.isPaused) {
 			if (shouldGenerateQuestion) {
-				ChatGPT chatGPTService = new ChatGPT();
-				QuestionModel questionModel = chatGPTService.generateQuestion("Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}");
-
-				System.out.println(questionModel.answers[questionModel.correct_answer]);
-				questionModal.writeQuestion(questionModel.question);
-				questionModal.writeAnswers(questionModel.answers, questionModel.correct_answer);
-
+				questionModal.generateQuestion();
 				shouldGenerateQuestion = false;
 			}
 
