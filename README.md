@@ -10,6 +10,11 @@ Every time the chicken collides with the car we will give you a second chance be
 
 ![Screenshot from 2023-06-28 00-16-51](https://github.com/Luisgustavom1/final-poo2-project/assets/65229051/1d11941d-d01f-49ad-b0c2-ded79d92afc5)
 
+> To curious people, this was the prompt we used to generate the questions
+```
+"Gere uma pergunta técnica sobre o universo da programação, onde temos uma pergunta e 4 respostas onde apenas uma está correta, o resto tem alguns erros não tão evidentes, mas tem erros. A pergunta possui no máximo 100 caracteres e cada resposta no máximo 30 caracteres. Dê o JSON nesse formato { \"question\":  String, \"answers\": String[], \"correct_answer\": number}"
+```
+
 ### Main concepts explored
 
 In the OOP course we had to build this project to show our knowledge in design patterns and persistence data.
